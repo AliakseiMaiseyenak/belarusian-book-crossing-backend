@@ -80,10 +80,10 @@ public class SecurityConfig {
                 .antMatchers("/chat.register").permitAll()
                 .antMatchers("/chat.send").permitAll()
                 .antMatchers("/app/*").permitAll()
-                .antMatchers("/books/*").permitAll()
-                .antMatchers("/books").permitAll()
                 .antMatchers("/books/my").authenticated()
                 .antMatchers("/books/receive").authenticated()
+                .antMatchers("/books/*").permitAll()
+                .antMatchers("/books").permitAll()
                 .antMatchers("/profile").authenticated()
                 .antMatchers(HttpMethod.PUT, "/profile").authenticated()
                 .antMatchers("/profile/*").permitAll()
@@ -101,7 +101,7 @@ public class SecurityConfig {
                 .successHandler((request, response, authentication) -> {
                     CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
                     userService.processOAuthPostLogin(oauthUser.getEmail());
-                    response.sendRedirect("https://belarusian-book-crossing.vercel.app/");
+                    response.sendRedirect("https://bbc-max.herokuapp.com/");
                 });
         return http.build();
     }

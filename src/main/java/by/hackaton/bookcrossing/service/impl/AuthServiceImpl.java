@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
         String verificationCode = RandomStringUtils.randomAlphabetic(32);
         VerificationStatus status = new VerificationStatus(account.getEmail(), verificationCode);
         verificationStatusRepository.save(status);
-        emailService.sendMessage(request.email,"VERIFY_MAIL_SUBJECT", "https://bookcrossing.com/auth/verify/email?email=" + account.getEmail() + "&code=" + verificationCode);
+        emailService.sendMessage(request.email,"VERIFY_MAIL_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/auth/verify/email?email=" + account.getEmail() + "&code=" + verificationCode);
     }
 
     @Override
