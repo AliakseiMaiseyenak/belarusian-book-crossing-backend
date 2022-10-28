@@ -94,7 +94,7 @@ public class SecurityConfig {
                 .oauth2Login()
                 .and().csrf().disable()
                 .oauth2Login()
-                .loginPage("https://belarusian-book-crossing.vercel.app/")
+                .loginPage("https://bbc-max.herokuapp.com/auth/signin")
                 .userInfoEndpoint()
                 .userService(oauthUserService)
                 .and()
