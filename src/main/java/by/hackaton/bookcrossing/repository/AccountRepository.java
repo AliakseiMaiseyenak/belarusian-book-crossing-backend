@@ -23,5 +23,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
     @Modifying
     @Query("UPDATE Account a SET a.enabled = TRUE where a.email = :email")
-    void verifyAccount(String email);
+    void verifyAccount(@Param("email") String email);
 }

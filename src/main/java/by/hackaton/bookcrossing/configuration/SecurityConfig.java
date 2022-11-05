@@ -75,6 +75,7 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auth/*").permitAll()
+                .antMatchers("/auth/**").permitAll()
                 .antMatchers("/websocket").permitAll()
                 .antMatchers("/topic/*").permitAll()
                 .antMatchers("/chat.register").permitAll()

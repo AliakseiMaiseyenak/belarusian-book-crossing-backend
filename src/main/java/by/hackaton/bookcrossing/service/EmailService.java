@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
+import javax.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -34,12 +37,14 @@ public class EmailService {
     }
 
     public void sendMessage(String to, String subject, String link) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("a.maiseyenak@gmail.com");
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(getTemplate().replace("{{link}}", link));
-        emailSender.send(message);
+        MimeMessagePreparator preparator = mimeMessage -> {
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+            message.setFrom("a.maiseyenak@gmail.com");
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(getTemplate().replace("{{link}}", link), true);
+        };
+        emailSender.send(preparator);
     }
 
     private String getTemplate() {

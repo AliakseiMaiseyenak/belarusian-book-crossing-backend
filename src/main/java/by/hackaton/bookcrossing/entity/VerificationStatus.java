@@ -1,6 +1,7 @@
 package by.hackaton.bookcrossing.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.Entity;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 public class VerificationStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

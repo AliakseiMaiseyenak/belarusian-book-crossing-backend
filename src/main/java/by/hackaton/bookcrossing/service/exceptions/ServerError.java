@@ -2,7 +2,9 @@ package by.hackaton.bookcrossing.service.exceptions;
 
 public enum ServerError {
     EMAIL_ALREADY_EXISTS(1002, "User with email already exists"),
-    INTERNAL_SERVER_ERROR(1003, "Internal server error");
+    EMAIL_NOT_CONFIRMED(1003, "Email not confirmed"),
+    WRONG_PASSWORD(1004, "Wrong password"),
+    INTERNAL_SERVER_ERROR(5001, "Internal server error");
 
     private int statusCode;
     private String message;

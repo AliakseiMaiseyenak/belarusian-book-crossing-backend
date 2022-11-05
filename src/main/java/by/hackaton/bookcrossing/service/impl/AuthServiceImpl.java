@@ -12,8 +12,10 @@ import by.hackaton.bookcrossing.repository.AccountRepository;
 import by.hackaton.bookcrossing.repository.VerificationStatusRepository;
 import by.hackaton.bookcrossing.service.AuthService;
 import by.hackaton.bookcrossing.service.EmailService;
+import by.hackaton.bookcrossing.service.exceptions.EmailConfirmationException;
 import by.hackaton.bookcrossing.service.exceptions.LogicalException;
 import by.hackaton.bookcrossing.service.exceptions.ServerError;
+import by.hackaton.bookcrossing.service.exceptions.WrongPasswordException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +23,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -54,10 +57,11 @@ public class AuthServiceImpl implements AuthService {
         String verificationCode = RandomStringUtils.randomAlphabetic(32);
         VerificationStatus status = new VerificationStatus(account.getEmail(), verificationCode);
         verificationStatusRepository.save(status);
-        emailService.sendMessage(request.email,"VERIFY_MAIL_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/auth/verify/email?email=" + account.getEmail() + "&code=" + verificationCode);
+        emailService.sendMessage(request.email,"VERIFY_MAIL_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + account.getEmail() + "&code=" + verificationCode);
     }
 
     @Override
+    @Transactional
     public void signUpConfirm(String email, String code) {
         VerificationStatus status = verificationStatusRepository.findByEmailAndCode(email, code).orElseThrow();
         verificationStatusRepository.delete(status);
@@ -66,6 +70,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
+        Account account = accountRepository.findByEmail(request.email).orElseThrow();
+        if (!account.getPassword().equals(request.getPassword())) {
+            throw new WrongPasswordException(ServerError.WRONG_PASSWORD);
+        }
+        if (!account.isEnabled()) {
+            throw new EmailConfirmationException(ServerError.EMAIL_NOT_CONFIRMED);
+        }
         Authentication authentication = authenticate(request);
         String accessToken = tokenProvider.createToken(authentication);
         return new AuthResponse(new Token(accessToken), getAccountByEmail(request.email));
