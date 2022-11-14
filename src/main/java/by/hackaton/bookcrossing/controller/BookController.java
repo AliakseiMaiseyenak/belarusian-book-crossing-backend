@@ -56,7 +56,7 @@ public class BookController {
         Book book = modelMapper.map(dto, Book.class);
         if (auth != null) {
             String email = AuthUtils.getEmailFromAuth(auth);
-            Account account = accountRepository.findByUsername(email).orElseThrow();
+            Account account = accountRepository.findByEmail(email).orElseThrow();
             book.setOwner(account);
         }
         bookRepository.save(book);
