@@ -57,9 +57,9 @@ public class BookController {
     }
 
     @GetMapping("/filter")
-    public ResponseEntity<List<BookDto>> getBooksByFilter(BookFilter filter) {
-        List<Book> books = bookService.autoComplete(filter);
-        return ok(books.stream().map(book -> modelMapper.map(book, BookDto.class)).collect(toList()));
+    public ResponseEntity<List<String>> getBooksByFilter(BookFilter filter) {
+        List<String> books = bookService.autoComplete(filter);
+        return ok(books);
     }
 
     @PostMapping
