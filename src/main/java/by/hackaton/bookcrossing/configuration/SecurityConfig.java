@@ -69,7 +69,7 @@ public class SecurityConfig {
         http
                 .cors()
                 .disable()
-                //.addFilterBefore(corsFilter, LogoutFilter.class)
+                .addFilterBefore(corsFilter, LogoutFilter.class)
                 .httpBasic()
                 .disable()
                 .authorizeRequests()
