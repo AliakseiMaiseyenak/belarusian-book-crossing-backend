@@ -68,8 +68,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .cors()
-                .and()
-                .addFilterBefore(corsFilter, LogoutFilter.class)
+                .disable()
+                //.addFilterBefore(corsFilter, LogoutFilter.class)
                 .httpBasic()
                 .disable()
                 .authorizeRequests()
