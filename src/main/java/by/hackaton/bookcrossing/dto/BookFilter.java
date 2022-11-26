@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class BookFilter {
-    public String text;
-    public FieldName field;
+    private String text;
+    private FieldName field;
 }
