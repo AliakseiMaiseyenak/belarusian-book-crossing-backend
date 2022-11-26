@@ -18,7 +18,7 @@ public class UserService {
 
         if (existUser == null) {
             Account newUser = new Account();
-            newUser.setUsername(username);
+            newUser.setUsername("Belarus_" + System.currentTimeMillis());
             newUser.setEmail(username);
             newUser.setEnabled(true);
 
