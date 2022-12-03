@@ -3,11 +3,8 @@ package by.hackaton.bookcrossing.controller;
 import by.hackaton.bookcrossing.dto.AccountDto;
 import by.hackaton.bookcrossing.dto.AccountShortDto;
 import by.hackaton.bookcrossing.dto.LoginRequest;
-import by.hackaton.bookcrossing.entity.Account;
-import by.hackaton.bookcrossing.repository.AccountRepository;
 import by.hackaton.bookcrossing.service.AccountService;
 import by.hackaton.bookcrossing.util.AuthUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -40,8 +37,8 @@ public class ProfileController {
     }
 
     @PutMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody LoginRequest login, Authentication auth){
-        accountService.resetPassword(login.password, AuthUtils.getEmailFromAuth(auth));
+    public ResponseEntity<Void> resetPassword(@RequestBody LoginRequest login, Authentication auth) {
+        accountService.resetPassword(login.getPassword(), AuthUtils.getEmailFromAuth(auth));
         return ok().build();
     }
 }
