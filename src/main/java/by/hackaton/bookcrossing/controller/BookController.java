@@ -24,6 +24,7 @@ import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
 @RequestMapping("/books")
+@CrossOrigin("*")
 public class BookController {
 
     private BookService bookService;
