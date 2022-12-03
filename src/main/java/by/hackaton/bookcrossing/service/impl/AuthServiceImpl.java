@@ -83,6 +83,11 @@ public class AuthServiceImpl implements AuthService {
         return new AuthResponse(new Token(accessToken), getAccountByEmail(request.getEmail()));
     }
 
+    @Override
+    public void deleteLast(long id) {
+        accountRepository.deleteById(id);
+    }
+
     private Authentication authenticate(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

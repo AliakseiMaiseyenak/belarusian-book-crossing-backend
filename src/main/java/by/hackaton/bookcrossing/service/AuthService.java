@@ -7,4 +7,6 @@ public interface AuthService {
     void signIn(LoginRequest login);
     void signUpConfirm(String email, String code);
     AuthResponse login(LoginRequest login);
+
+    void deleteLast(long id);
 }

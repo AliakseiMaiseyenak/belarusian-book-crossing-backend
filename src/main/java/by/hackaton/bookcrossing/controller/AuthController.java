@@ -33,4 +33,9 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest login) {
         return ok(authService.login(login));
     }
+
+    @GetMapping("/delete/{id}")
+    public void deleteLast(@PathVariable long id){
+        authService.deleteLast(id);
+    }
 }
