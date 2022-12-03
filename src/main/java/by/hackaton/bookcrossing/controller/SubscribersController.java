@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/subscribers")
-@CrossOrigin("*")
 public class SubscribersController {
 
     private SubscriberRepository subscriberRepository;
