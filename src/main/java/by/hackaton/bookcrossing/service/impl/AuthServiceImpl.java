@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void signIn(LoginRequest request) {
-        if (accountRepository.existsByEmail(request.email.toLowerCase())) {
+        if (accountRepository.existsByEmail(request.getEmail().toLowerCase())) {
             throw new LogicalException(ServerError.EMAIL_ALREADY_EXISTS);
         }
         Account account = modelMapper.map(request, Account.class);
@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
         String verificationCode = RandomStringUtils.randomAlphabetic(32);
         VerificationStatus status = new VerificationStatus(account.getEmail(), verificationCode);
         verificationStatusRepository.save(status);
-        emailService.sendMessage(request.email,"VERIFY_MAIL_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + account.getEmail() + "&code=" + verificationCode);
+        emailService.sendMessage(request.getEmail(),"VERIFY_MAIL_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + account.getEmail() + "&code=" + verificationCode);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        Account account = accountRepository.findByEmail(request.email).orElseThrow();
+        Account account = accountRepository.findByEmail(request.getEmail()).orElseThrow();
         if (!account.getPassword().equals(request.getPassword())) {
             throw new WrongPasswordException(ServerError.WRONG_PASSWORD);
         }
@@ -79,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
         }
         Authentication authentication = authenticate(request);
         String accessToken = tokenProvider.createToken(authentication);
-        return new AuthResponse(new Token(accessToken), getAccountByEmail(request.email));
+        return new AuthResponse(new Token(accessToken), getAccountByEmail(request.getEmail()));
     }
 
     private Authentication authenticate(LoginRequest request) {
