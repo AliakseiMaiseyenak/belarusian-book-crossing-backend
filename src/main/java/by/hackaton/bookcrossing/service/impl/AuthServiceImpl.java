@@ -47,6 +47,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public void signIn(LoginRequest request) {
         if (accountRepository.existsByEmail(request.getEmail().toLowerCase())) {
             throw new LogicalException(ServerError.EMAIL_ALREADY_EXISTS);
@@ -57,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
         String verificationCode = RandomStringUtils.randomAlphabetic(32);
         VerificationStatus status = new VerificationStatus(account.getEmail(), verificationCode);
         verificationStatusRepository.save(status);
-        emailService.sendMessage(request.getEmail(),"VERIFY_MAIL_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + account.getEmail() + "&code=" + verificationCode);
+        //emailService.sendMessage(request.getEmail(),"VERIFY_MAIL_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + account.getEmail() + "&code=" + verificationCode);
     }
 
     @Override

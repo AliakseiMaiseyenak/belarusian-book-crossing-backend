@@ -20,7 +20,7 @@ public class Account {
     private List<Book> books;
     @OneToMany(mappedBy = "receiver")
     private List<BookOrder> bookOrders;
-    private boolean enabled;
+    private boolean enabled = true;
 
     @Enumerated(EnumType.STRING)
     private Role role;
