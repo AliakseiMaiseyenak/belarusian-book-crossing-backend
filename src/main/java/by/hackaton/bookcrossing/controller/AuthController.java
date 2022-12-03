@@ -34,8 +34,13 @@ public class AuthController {
         return ok(authService.login(login));
     }
 
-    @GetMapping("/delete/{id}")
-    public void deleteLast(@PathVariable long id){
-        authService.deleteLast(id);
+    @GetMapping("/delete/{username}")
+    public void deleteLast(@PathVariable String username){
+        authService.deleteLast(username);
+    }
+
+    @GetMapping("/delete")
+    public void deleteLast(){
+        authService.deleteLast();
     }
 }

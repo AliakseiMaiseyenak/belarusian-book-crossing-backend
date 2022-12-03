@@ -25,6 +25,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -58,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
         String verificationCode = RandomStringUtils.randomAlphabetic(32);
         VerificationStatus status = new VerificationStatus(account.getEmail(), verificationCode);
         verificationStatusRepository.save(status);
-        emailService.sendMessage(request.getEmail(),"VERIFY_MAIL_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + account.getEmail() + "&code=" + verificationCode);
+        emailService.sendMessage(request.getEmail(), "VERIFY_MAIL_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + account.getEmail() + "&code=" + verificationCode);
     }
 
     @Override
@@ -84,8 +87,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void deleteLast(long id) {
-        accountRepository.deleteById(id);
+    public void deleteLast(String username) {
+        Optional<Account> account = accountRepository.findAll().stream().filter(a -> a.getUsername().equals(username)).findFirst();
+        account.ifPresent(account1 -> accountRepository.delete(account1));
+    }
+
+    @Override
+    public void deleteLast() {
+        List<Account> accounts = accountRepository.findAll();
+        accountRepository.delete(accounts.get(accounts.size() - 1));
     }
 
     private Authentication authenticate(LoginRequest request) {

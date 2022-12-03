@@ -8,5 +8,6 @@ public interface AuthService {
     void signUpConfirm(String email, String code);
     AuthResponse login(LoginRequest login);
 
-    void deleteLast(long id);
+    void deleteLast(String username);
+    void deleteLast();
 }
