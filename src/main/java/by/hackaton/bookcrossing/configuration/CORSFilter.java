@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -16,7 +17,7 @@ public class CORSFilter implements Filter {
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         final HttpServletResponse response = (HttpServletResponse) res;
-        final HttpServletResponse request = (HttpServletResponse) req;
+        final HttpServletRequest request = (HttpServletRequest) req;
         if (FRONT_URL.equals(request.getHeader("Origin"))) {
             response.setHeader("Access-Control-Allow-Origin", FRONT_URL);
         } else if (MAIN_URL.equals(request.getHeader("Origin"))) {
