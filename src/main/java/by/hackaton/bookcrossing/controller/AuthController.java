@@ -4,6 +4,7 @@ import by.hackaton.bookcrossing.dto.EmailDto;
 import by.hackaton.bookcrossing.dto.LoginRequest;
 import by.hackaton.bookcrossing.dto.security.AuthResponse;
 import by.hackaton.bookcrossing.service.AuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,12 +46,23 @@ public class AuthController {
     }
 
     @GetMapping("/delete/{username}")
-    public void deleteLast(@PathVariable String email){
+    public ResponseEntity<Void> deleteLast(@PathVariable String email){
         authService.deleteByEmail(email);
+        return ok().build();
     }
 
     @GetMapping("/delete")
-    public void deleteLast(){
+    public ResponseEntity<Void> deleteLast(){
         authService.deleteLast();
+        return ok().build();
+    }
+
+    @GetMapping("/check/{username}")
+    public ResponseEntity<Void> checkUsername(@PathVariable String username) {
+        if (!authService.isUsernameExist(username)) {
+            return ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }

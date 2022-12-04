@@ -11,4 +11,6 @@ public interface AuthService {
 
     void deleteByEmail(String email);
     void deleteLast();
+
+    boolean isUsernameExist(String username);
 }

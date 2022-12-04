@@ -66,7 +66,7 @@ public class AuthServiceImpl implements AuthService {
         String verificationCode = RandomStringUtils.randomAlphabetic(32);
         VerificationStatus status = new VerificationStatus(account.getEmail(), verificationCode);
         verificationStatusRepository.save(status);
-        emailService.sendMessage(request.getEmail(), "VERIFY_MAIL_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + account.getEmail() + "&code=" + verificationCode);
+        //emailService.sendMessage(request.getEmail(), "Рэгістрацыя", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + account.getEmail() + "&code=" + verificationCode);
     }
 
     @Override
@@ -78,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
         TemporaryPassword temp = temporaryPasswordRepository.findById(email).orElse(new TemporaryPassword(email));
         temp.setCode(verificationCode);
         temporaryPasswordRepository.save(temp);
-        emailService.sendMessage(email, "REST_PASSWORD_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + email + "&code=" + verificationCode);
+        //emailService.sendMessage(email, "Аднаўленне паролю", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + email + "&code=" + verificationCode);
     }
 
     @Override
@@ -113,6 +113,11 @@ public class AuthServiceImpl implements AuthService {
     public void deleteLast() {
         List<Account> accounts = accountRepository.findAll();
         accountRepository.delete(accounts.get(accounts.size() - 1));
+    }
+
+    @Override
+    public boolean isUsernameExist(String username) {
+        return accountRepository.existsByUsernameIgnoreCase(username);
     }
 
     private Authentication authenticate(LoginRequest request) {
