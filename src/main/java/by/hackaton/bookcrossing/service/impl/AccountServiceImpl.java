@@ -2,7 +2,7 @@ package by.hackaton.bookcrossing.service.impl;
 
 import by.hackaton.bookcrossing.dto.AccountDto;
 import by.hackaton.bookcrossing.dto.AccountShortDto;
-import by.hackaton.bookcrossing.dto.PasswordRequest;
+import by.hackaton.bookcrossing.dto.request.PasswordRequest;
 import by.hackaton.bookcrossing.entity.Account;
 import by.hackaton.bookcrossing.repository.AccountRepository;
 import by.hackaton.bookcrossing.repository.TemporaryPasswordRepository;

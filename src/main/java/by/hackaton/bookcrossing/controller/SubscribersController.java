@@ -1,6 +1,6 @@
 package by.hackaton.bookcrossing.controller;
 
-import by.hackaton.bookcrossing.dto.SubscriptionRequest;
+import by.hackaton.bookcrossing.dto.request.SubscriptionRequest;
 import by.hackaton.bookcrossing.entity.Subscriber;
 import by.hackaton.bookcrossing.repository.SubscriberRepository;
 import org.springframework.http.HttpStatus;

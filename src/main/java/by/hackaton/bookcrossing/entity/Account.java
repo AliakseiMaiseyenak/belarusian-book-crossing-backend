@@ -21,6 +21,7 @@ public class Account {
     @OneToMany(mappedBy = "receiver")
     private List<BookOrder> bookOrders;
     private boolean enabled = true;
+    private Boolean deleted = false;
 
     @Enumerated(EnumType.STRING)
     private Role role;

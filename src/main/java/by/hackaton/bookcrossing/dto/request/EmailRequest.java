@@ -1,4 +1,4 @@
-package by.hackaton.bookcrossing.dto;
+package by.hackaton.bookcrossing.dto.request;
 
 public class EmailRequest {
     public String subject;

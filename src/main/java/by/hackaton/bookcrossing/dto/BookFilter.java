@@ -1,5 +1,6 @@
 package by.hackaton.bookcrossing.dto;
 
+import by.hackaton.bookcrossing.dto.enums.FieldName;
 import lombok.Data;
 
 @Data

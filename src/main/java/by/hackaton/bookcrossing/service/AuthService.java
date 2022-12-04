@@ -1,6 +1,6 @@
 package by.hackaton.bookcrossing.service;
 
-import by.hackaton.bookcrossing.dto.LoginRequest;
+import by.hackaton.bookcrossing.dto.request.LoginRequest;
 import by.hackaton.bookcrossing.dto.security.AuthResponse;
 
 public interface AuthService {

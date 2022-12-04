@@ -2,8 +2,7 @@ package by.hackaton.bookcrossing.controller;
 
 import by.hackaton.bookcrossing.dto.AccountDto;
 import by.hackaton.bookcrossing.dto.AccountShortDto;
-import by.hackaton.bookcrossing.dto.LoginRequest;
-import by.hackaton.bookcrossing.dto.PasswordRequest;
+import by.hackaton.bookcrossing.dto.request.PasswordRequest;
 import by.hackaton.bookcrossing.service.AccountService;
 import by.hackaton.bookcrossing.util.AuthUtils;
 import org.springframework.http.ResponseEntity;

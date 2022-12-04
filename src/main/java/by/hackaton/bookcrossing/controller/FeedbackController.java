@@ -1,6 +1,6 @@
 package by.hackaton.bookcrossing.controller;
 
-import by.hackaton.bookcrossing.dto.EmailRequest;
+import by.hackaton.bookcrossing.dto.request.EmailRequest;
 import by.hackaton.bookcrossing.service.EmailService;
 import by.hackaton.bookcrossing.util.AuthUtils;
 import org.springframework.http.ResponseEntity;

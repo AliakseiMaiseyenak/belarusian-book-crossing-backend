@@ -1,4 +1,4 @@
-package by.hackaton.bookcrossing.dto;
+package by.hackaton.bookcrossing.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,7 +1,7 @@
 package by.hackaton.bookcrossing.controller;
 
 import by.hackaton.bookcrossing.dto.EmailDto;
-import by.hackaton.bookcrossing.dto.LoginRequest;
+import by.hackaton.bookcrossing.dto.request.LoginRequest;
 import by.hackaton.bookcrossing.dto.security.AuthResponse;
 import by.hackaton.bookcrossing.service.AuthService;
 import org.springframework.http.HttpStatus;

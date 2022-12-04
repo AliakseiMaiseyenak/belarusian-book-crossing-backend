@@ -1,7 +1,7 @@
 package by.hackaton.bookcrossing.service.impl;
 
 import by.hackaton.bookcrossing.dto.AccountDto;
-import by.hackaton.bookcrossing.dto.LoginRequest;
+import by.hackaton.bookcrossing.dto.request.LoginRequest;
 import by.hackaton.bookcrossing.dto.security.AuthResponse;
 import by.hackaton.bookcrossing.dto.security.Token;
 import by.hackaton.bookcrossing.dto.security.TokenProvider;
