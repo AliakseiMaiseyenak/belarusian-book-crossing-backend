@@ -6,9 +6,11 @@ import by.hackaton.bookcrossing.dto.security.AuthResponse;
 import by.hackaton.bookcrossing.dto.security.Token;
 import by.hackaton.bookcrossing.dto.security.TokenProvider;
 import by.hackaton.bookcrossing.entity.Account;
+import by.hackaton.bookcrossing.entity.TemporaryPassword;
 import by.hackaton.bookcrossing.entity.VerificationStatus;
 import by.hackaton.bookcrossing.entity.enums.Role;
 import by.hackaton.bookcrossing.repository.AccountRepository;
+import by.hackaton.bookcrossing.repository.TemporaryPasswordRepository;
 import by.hackaton.bookcrossing.repository.VerificationStatusRepository;
 import by.hackaton.bookcrossing.service.AuthService;
 import by.hackaton.bookcrossing.service.EmailService;
@@ -37,22 +39,25 @@ public class AuthServiceImpl implements AuthService {
     private AccountRepository accountRepository;
     private VerificationStatusRepository verificationStatusRepository;
     private EmailService emailService;
+    private TemporaryPasswordRepository temporaryPasswordRepository;
 
     public AuthServiceImpl(AuthenticationManager authenticationManager, TokenProvider tokenProvider,
                            ModelMapper modelMapper, AccountRepository accountRepository,
-                           VerificationStatusRepository verificationStatusRepository, EmailService emailService) {
+                           VerificationStatusRepository verificationStatusRepository, EmailService emailService,
+                           TemporaryPasswordRepository temporaryPasswordRepository) {
         this.authenticationManager = authenticationManager;
         this.tokenProvider = tokenProvider;
         this.modelMapper = modelMapper;
         this.accountRepository = accountRepository;
         this.verificationStatusRepository = verificationStatusRepository;
         this.emailService = emailService;
+        this.temporaryPasswordRepository = temporaryPasswordRepository;
     }
 
     @Override
     @Transactional
     public void signIn(LoginRequest request) {
-        if (accountRepository.existsByEmail(request.getEmail().toLowerCase())) {
+        if (accountRepository.existsByEmail(request.getEmail())) {
             throw new LogicalException(ServerError.EMAIL_ALREADY_EXISTS);
         }
         Account account = modelMapper.map(request, Account.class);
@@ -62,6 +67,18 @@ public class AuthServiceImpl implements AuthService {
         VerificationStatus status = new VerificationStatus(account.getEmail(), verificationCode);
         verificationStatusRepository.save(status);
         emailService.sendMessage(request.getEmail(), "VERIFY_MAIL_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + account.getEmail() + "&code=" + verificationCode);
+    }
+
+    @Override
+    public void resetPassword(String email) {
+        if (!accountRepository.existsByEmail(email)) {
+            throw new LogicalException("Email not found");
+        }
+        String verificationCode = RandomStringUtils.randomAlphabetic(32);
+        TemporaryPassword temp = temporaryPasswordRepository.findById(email).orElse(new TemporaryPassword(email));
+        temp.setCode(verificationCode);
+        temporaryPasswordRepository.save(temp);
+        emailService.sendMessage(email, "REST_PASSWORD_SUBJECT", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + email + "&code=" + verificationCode);
     }
 
     @Override
@@ -87,8 +104,8 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void deleteLast(String username) {
-        Optional<Account> account = accountRepository.findAll().stream().filter(a -> a.getUsername().equals(username)).findFirst();
+    public void deleteByEmail(String email) {
+        Optional<Account> account = accountRepository.findAll().stream().filter(a -> a.getEmail().equals(email)).findFirst();
         account.ifPresent(account1 -> accountRepository.delete(account1));
     }
 

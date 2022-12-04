@@ -3,6 +3,7 @@ package by.hackaton.bookcrossing.controller;
 import by.hackaton.bookcrossing.dto.AccountDto;
 import by.hackaton.bookcrossing.dto.AccountShortDto;
 import by.hackaton.bookcrossing.dto.LoginRequest;
+import by.hackaton.bookcrossing.dto.PasswordRequest;
 import by.hackaton.bookcrossing.service.AccountService;
 import by.hackaton.bookcrossing.util.AuthUtils;
 import org.springframework.http.ResponseEntity;
@@ -36,9 +37,15 @@ public class ProfileController {
         return ok(accountService.getUserByUsername(username));
     }
 
-    @PutMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody LoginRequest login, Authentication auth) {
-        accountService.resetPassword(login.getPassword(), AuthUtils.getEmailFromAuth(auth));
+    @PutMapping("/change-password")
+    public ResponseEntity<Void> changePassword(@RequestBody PasswordRequest request, Authentication auth) {
+        accountService.changePassword(request.getPassword(), AuthUtils.getEmailFromAuth(auth));
+        return ok().build();
+    }
+
+    @GetMapping("/change-password")
+    public ResponseEntity<Void> changePasswordWithCode(@RequestParam PasswordRequest request) {
+        accountService.changePasswordWithCode(request);
         return ok().build();
     }
 }

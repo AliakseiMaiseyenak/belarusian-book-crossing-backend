@@ -5,9 +5,10 @@ import by.hackaton.bookcrossing.dto.security.AuthResponse;
 
 public interface AuthService {
     void signIn(LoginRequest login);
+    void resetPassword(String email);
     void signUpConfirm(String email, String code);
     AuthResponse login(LoginRequest login);
 
-    void deleteLast(String username);
+    void deleteByEmail(String email);
     void deleteLast();
 }
