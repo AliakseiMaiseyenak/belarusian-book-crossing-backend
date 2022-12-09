@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void signIn(LoginRequest request) {
+    public AuthResponse signIn(LoginRequest request) {
         if (accountRepository.existsByEmail(request.getEmail())) {
             throw new LogicalException(ServerError.EMAIL_ALREADY_EXISTS);
         }
@@ -67,6 +67,9 @@ public class AuthServiceImpl implements AuthService {
         VerificationStatus status = new VerificationStatus(account.getEmail(), verificationCode);
         verificationStatusRepository.save(status);
         //emailService.sendMessage(request.getEmail(), "Рэгістрацыя", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + account.getEmail() + "&code=" + verificationCode);
+        Authentication authentication = authenticate(request);
+        String accessToken = tokenProvider.createToken(authentication);
+        return new AuthResponse(new Token(accessToken), getAccountByEmail(request.getEmail()));
     }
 
     @Override

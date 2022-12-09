@@ -23,9 +23,8 @@ public class AuthController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<Void> signIn(@RequestBody @Valid LoginRequest login) {
-        authService.signIn(login);
-        return ok().build();
+    public ResponseEntity<AuthResponse> signIn(@RequestBody @Valid LoginRequest login) {
+        return ok(authService.signIn(login));
     }
 
     @GetMapping("/verify/mail")

@@ -4,7 +4,7 @@ import by.hackaton.bookcrossing.dto.request.LoginRequest;
 import by.hackaton.bookcrossing.dto.security.AuthResponse;
 
 public interface AuthService {
-    void signIn(LoginRequest login);
+    AuthResponse signIn(LoginRequest login);
     void resetPassword(String email);
     void signUpConfirm(String email, String code);
     AuthResponse login(LoginRequest login);
