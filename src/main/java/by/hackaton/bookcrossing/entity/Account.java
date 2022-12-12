@@ -16,10 +16,12 @@ public class Account {
     @Column(unique = true)
     private String username;
     private String password;
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY)
     private List<Book> books;
-    @OneToMany(mappedBy = "receiver")
-    private List<BookOrder> bookOrders;
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
+    private List<Book> sentBooks;
+    private Double latitude;
+    private Double longitude;
     private boolean enabled = true;
     private Boolean deleted = false;
 

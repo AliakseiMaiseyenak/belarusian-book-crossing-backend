@@ -2,6 +2,7 @@ package by.hackaton.bookcrossing.controller;
 
 import by.hackaton.bookcrossing.dto.EmailDto;
 import by.hackaton.bookcrossing.dto.request.LoginRequest;
+import by.hackaton.bookcrossing.dto.request.SignInRequest;
 import by.hackaton.bookcrossing.dto.security.AuthResponse;
 import by.hackaton.bookcrossing.service.AuthService;
 import org.springframework.http.HttpStatus;
@@ -23,8 +24,8 @@ public class AuthController {
     }
 
     @PostMapping("/signIn")
-    public ResponseEntity<AuthResponse> signIn(@RequestBody @Valid LoginRequest login) {
-        return ok(authService.signIn(login));
+    public ResponseEntity<AuthResponse> signIn(@RequestBody @Valid SignInRequest request) {
+        return ok(authService.signIn(request));
     }
 
     @GetMapping("/verify/mail")

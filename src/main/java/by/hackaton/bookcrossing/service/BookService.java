@@ -3,11 +3,15 @@ package by.hackaton.bookcrossing.service;
 import by.hackaton.bookcrossing.dto.BookDto;
 import by.hackaton.bookcrossing.dto.BookFilter;
 import by.hackaton.bookcrossing.dto.BookShortDto;
+import by.hackaton.bookcrossing.dto.CreatedEntityIdResponse;
+import by.hackaton.bookcrossing.dto.response.BookResponse;
 import by.hackaton.bookcrossing.entity.Account;
 import by.hackaton.bookcrossing.entity.Book;
+import by.hackaton.bookcrossing.entity.enums.BookStatus;
 import by.hackaton.bookcrossing.repository.BookRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -40,7 +44,7 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class BookService {
 
-    private String url = "http://classify.oclc.org/classify2/Classify?isbn=%s&summary=true";
+    private final String url = "http://classify.oclc.org/classify2/Classify?isbn=%s&summary=true";
 
     @PersistenceContext
     private EntityManager em;
@@ -54,28 +58,43 @@ public class BookService {
     }
 
     public List<BookDto> getBooks() {
-        return bookRepository.findAll().stream().map(b -> modelMapper.map(b, BookDto.class)).collect(toList());
+        return bookRepository.findByStatusAVAILABLE().stream().map(b -> modelMapper.map(b, BookDto.class)).collect(toList());
     }
 
     public BookDto getBookById(Long id) {
         Book book = bookRepository.findById(id).orElseThrow();
         return modelMapper.map(book, BookDto.class);
+
+    }
+    public List<BookResponse> getMyBooks(String email) {
+        return bookRepository.findByOwner_Email(email).stream().map(b -> modelMapper.map(b, BookResponse.class)).collect(toList());
     }
 
-    public List<BookDto> getMyBooks(String email) {
-        return bookRepository.findByOwner_Username(email).stream().map(b -> modelMapper.map(b, BookDto.class)).collect(toList());
+    public List<BookResponse> getSentBooks(String email) {
+        return bookRepository.findByReceiver_Email(email).stream().map(b -> modelMapper.map(b, BookResponse.class)).collect(toList());
     }
 
-    public void createBook(BookDto dto, Account owner) {
+    public CreatedEntityIdResponse createBook(BookDto dto, Account owner) {
         Book book = modelMapper.map(dto, Book.class);
         book.setOwner(owner);
         bookRepository.save(book);
+        return new CreatedEntityIdResponse(book.getId());
     }
 
-    public void updateBook(Long id, BookDto dto) {
-        Book book = bookRepository.findById(id).orElseThrow();
+    public BookDto updateBook(Long id, BookDto dto, String email) {
+        Book book = bookRepository.findByIdAndOwner_Email(id, email).orElseThrow();
         modelMapper.map(book, dto);
         bookRepository.save(book);
+        return modelMapper.map(book, BookDto.class);
+    }
+
+    @Transactional
+    public BookDto updateStatus(Long id, String email) {
+        Book book = bookRepository.findByIdAndOwner_Email(id, email).orElseThrow();
+        BookStatus newStatus = book.getStatus().equals(BookStatus.AVAILABLE) ? BookStatus.NOT_AVAILABLE : BookStatus.AVAILABLE;
+        book.setStatus(newStatus);
+        bookRepository.save(book);
+        return modelMapper.map(book, BookDto.class);
     }
 
     public List<String> autoComplete(BookFilter filter) {
@@ -124,13 +143,6 @@ public class BookService {
                     dto.setTitle(title);
                     dto.setISBN(isbn);
                     return dto;
-
-                    //String date = getAttribute(xpath, node, "@lyr");
-                    //String editions = getAttribute(xpath, node, "@editions");
-                    //String format = getAttribute(xpath, node, "@format");
-                    //String owi = getAttribute(xpath, node, "@owi");
-                    //System.out.println("title=" + title + " author=" + author + " editions=" + editions + " date=" + date + " format=" + format + " owi=" + owi);
-
                 }
             }
         } catch (IOException e) {

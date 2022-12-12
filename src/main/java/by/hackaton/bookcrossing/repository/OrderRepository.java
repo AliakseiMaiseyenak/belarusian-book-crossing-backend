@@ -14,6 +14,6 @@ public interface OrderRepository extends JpaRepository<BookOrder, Long> {
     List<BookOrder> findByReceiver_Username(String username);
 
     @Modifying
-    @Query("UPDATE BookOrder o set o.sendStatus = :status Where id =:id")
-    void changeSendStatus(Long id, String status);
+    @Query("DELETE FROM BookOrder o WHERE o.book.id = :bookId AND o.active = true")
+    void deleteActiveOrder(Long bookId);
 }

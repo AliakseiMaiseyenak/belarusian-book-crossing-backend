@@ -1,14 +1,11 @@
 package by.hackaton.bookcrossing.controller;
 
+import by.hackaton.bookcrossing.dto.BookDto;
 import by.hackaton.bookcrossing.dto.CreateOrderDTO;
 import by.hackaton.bookcrossing.dto.OrderDto;
-import by.hackaton.bookcrossing.entity.Account;
-import by.hackaton.bookcrossing.entity.Book;
-import by.hackaton.bookcrossing.entity.BookOrder;
-import by.hackaton.bookcrossing.entity.enums.BookStatus;
-import by.hackaton.bookcrossing.repository.AccountRepository;
-import by.hackaton.bookcrossing.repository.BookRepository;
+import by.hackaton.bookcrossing.dto.request.OrderRequest;
 import by.hackaton.bookcrossing.repository.OrderRepository;
+import by.hackaton.bookcrossing.service.OrderService;
 import by.hackaton.bookcrossing.util.AuthUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +22,12 @@ import static org.springframework.http.ResponseEntity.ok;
 public class OrderController {
 
     private OrderRepository orderRepository;
-    private BookRepository bookRepository;
-    private AccountRepository accountRepository;
+    private OrderService orderService;
     private ModelMapper modelMapper;
 
-    public OrderController(OrderRepository orderRepository, BookRepository bookRepository, AccountRepository accountRepository, ModelMapper modelMapper) {
+    public OrderController(OrderRepository orderRepository, OrderService orderService, ModelMapper modelMapper) {
         this.orderRepository = orderRepository;
-        this.bookRepository = bookRepository;
-        this.accountRepository = accountRepository;
+        this.orderService = orderService;
         this.modelMapper = modelMapper;
     }
 
@@ -43,26 +38,25 @@ public class OrderController {
         return ok(orders);
     }
 
-    @PostMapping("/reserve")
-    public ResponseEntity<Void> sendBook(@RequestBody CreateOrderDTO dto) {
-        Book book = bookRepository.findById(dto.getBookId()).orElseThrow();
-        book.setAvailable(false);
-        bookRepository.save(book);
-        Account sendTo = accountRepository.findByUsername(dto.getReceiver()).orElseThrow();
-        BookOrder bookOrder = BookOrder.builder().book(book).receiver(sendTo).sendType(dto.getSendType()).sendStatus(BookStatus.RESERVED).build();
-        orderRepository.save(bookOrder);
-        return ok().build();
+    @PostMapping("/sent")
+    public ResponseEntity<BookDto> sendBook(@RequestBody CreateOrderDTO dto, Authentication auth) {
+        return ok(orderService.sendBook(dto, AuthUtils.getEmailFromAuth(auth)));
     }
 
-    @PutMapping("/sent")
-    public ResponseEntity<Void> sendBook(@RequestBody Long id) {
-        orderRepository.changeSendStatus(id, BookStatus.SENT.name());
-        return ok().build();
+    @PostMapping("/cancel")
+    public ResponseEntity<BookDto> cancelSending(@RequestBody OrderRequest request, Authentication auth) {
+        return ok(orderService.cancel(request.bookId, AuthUtils.getEmailFromAuth(auth)));
     }
 
-    @PutMapping("/delivered")
-    public ResponseEntity<Void> receiveBook(@RequestBody Long id) {
-        orderRepository.changeSendStatus(id, BookStatus.DELIVERED.name());
+    /*@PutMapping("/sent")
+    public ResponseEntity<Void> sendBook(@RequestBody OrderRequest request, Authentication auth) {
+        orderService.receiveBook(request.bookId, AuthUtils.getEmailFromAuth(auth));
+        return ok().build();
+    }*/
+
+    @PutMapping("/receive")
+    public ResponseEntity<Void> receiveBook(@RequestBody OrderRequest request, Authentication auth) {
+        orderService.receiveBook(request.bookId, AuthUtils.getEmailFromAuth(auth));
         return ok().build();
     }
 }

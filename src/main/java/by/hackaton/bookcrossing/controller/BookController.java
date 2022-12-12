@@ -3,13 +3,12 @@ package by.hackaton.bookcrossing.controller;
 import by.hackaton.bookcrossing.dto.BookDto;
 import by.hackaton.bookcrossing.dto.BookFilter;
 import by.hackaton.bookcrossing.dto.BookShortDto;
+import by.hackaton.bookcrossing.dto.CreatedEntityIdResponse;
+import by.hackaton.bookcrossing.dto.response.BookResponse;
 import by.hackaton.bookcrossing.entity.Account;
-import by.hackaton.bookcrossing.entity.Book;
 import by.hackaton.bookcrossing.repository.AccountRepository;
-import by.hackaton.bookcrossing.repository.BookRepository;
 import by.hackaton.bookcrossing.service.BookService;
 import by.hackaton.bookcrossing.util.AuthUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
 import java.util.List;
+
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
@@ -34,15 +34,19 @@ public class BookController {
 
     @GetMapping
     public ResponseEntity<List<BookDto>> getBooks() {
-        List<BookDto> books = bookService.getBooks();
-        return ok(books);
+        return ok(bookService.getBooks());
     }
 
     @GetMapping("/my")
-    public ResponseEntity<List<BookDto>> getMyBooks(Authentication auth) {
+    public ResponseEntity<List<BookResponse>> getMyBooks(Authentication auth) {
         String email = AuthUtils.getEmailFromAuth(auth);
-        List<BookDto> books = bookService.getMyBooks(email);
-        return ok(books);
+        return ok(bookService.getMyBooks(email));
+    }
+
+    @GetMapping("/sent")
+    public ResponseEntity<List<BookResponse>> getSentBooks(Authentication auth) {
+        String email = AuthUtils.getEmailFromAuth(auth);
+        return ok(bookService.getSentBooks(email));
     }
 
     @GetMapping("/{id}")
@@ -63,20 +67,24 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> createBook(@RequestBody @Valid BookDto dto, Authentication auth) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<CreatedEntityIdResponse> createBook(@RequestBody @Valid BookDto dto, Authentication auth) {
         Account account = null;
         if (auth != null) {
             String email = AuthUtils.getEmailFromAuth(auth);
             account = accountRepository.findByEmail(email).orElseThrow();
         }
-        bookService.createBook(dto, account);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ok(bookService.createBook(dto, account));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateBook(@PathVariable("id") Long id, @RequestParam BookDto dto) {
-        bookService.updateBook(id, dto);
-        return ok().build();
+    public ResponseEntity<BookDto> updateBook(@PathVariable("id") Long id, @RequestParam BookDto dto, Authentication auth) {
+        return ok(bookService.updateBook(id, dto, AuthUtils.getEmailFromAuth(auth)));
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<BookDto> updateBookStatus(@PathVariable("id") Long id, Authentication auth) {
+        return ok(bookService.updateStatus(id, AuthUtils.getEmailFromAuth(auth)));
     }
 
     /*@DeleteMapping("/{id}")

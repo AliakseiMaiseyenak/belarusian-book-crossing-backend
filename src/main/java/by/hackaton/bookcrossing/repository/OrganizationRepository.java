@@ -9,5 +9,7 @@ import java.util.List;
 
 @Repository
 public interface OrganizationRepository extends JpaRepository<Organization, Long> {
-    List<Organization> findByType(OrganizationType type);
+    List<Organization> findByTypeAndAvailableTrue(OrganizationType type);
+
+    List<Organization> findByAvailableTrue();
 }

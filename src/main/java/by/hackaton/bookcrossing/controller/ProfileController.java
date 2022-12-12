@@ -23,12 +23,12 @@ public class ProfileController {
 
     @GetMapping
     public ResponseEntity<AccountDto> getUser(Authentication auth) {
-        return ok(accountService.getUser(auth.getName()));
+        return ok(accountService.getUser(AuthUtils.getEmailFromAuth(auth)));
     }
 
     @PutMapping
     public ResponseEntity<AccountDto> updateUser(@RequestBody AccountDto dto, Authentication auth) {
-        return ok(accountService.updateUser(auth.getName(), dto));
+        return ok(accountService.updateUser(AuthUtils.getEmailFromAuth(auth), dto));
     }
 
     @GetMapping("/{username}")

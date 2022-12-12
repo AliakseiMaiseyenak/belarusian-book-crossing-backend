@@ -23,7 +23,7 @@ public class OrganizationService {
     }
 
     public List<OrganizationDto> getOrganizations() {
-        return organizationRepository.findAll().stream().map(b -> modelMapper.map(b, OrganizationDto.class)).collect(toList());
+        return organizationRepository.findByAvailableTrue().stream().map(b -> modelMapper.map(b, OrganizationDto.class)).collect(toList());
     }
 
     public OrganizationDto getOrganizationById(Long id) {
@@ -32,7 +32,7 @@ public class OrganizationService {
     }
 
     public List<OrganizationDto> getOrganizationByType(OrganizationType type) {
-        List<Organization> organizations = organizationRepository.findByType(type);
+        List<Organization> organizations = organizationRepository.findByTypeAndAvailableTrue(type);
         return organizations.stream().map(o -> modelMapper.map(o, OrganizationDto.class)).collect(toList());
     }
 

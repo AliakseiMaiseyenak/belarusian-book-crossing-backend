@@ -2,6 +2,7 @@ package by.hackaton.bookcrossing.entity;
 
 import by.hackaton.bookcrossing.entity.enums.OrganizationType;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,10 +11,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
-public class Organization {
-    @Id
-    @GeneratedValue
-    private Long id;
+public class Organization extends BaseEntity{
     @NotNull
     private String name;
     @NotNull
@@ -31,4 +29,6 @@ public class Organization {
     private Double latitude;
     @NotNull
     private Double longitude;
+    @ColumnDefault("true")
+    private String available;
 }

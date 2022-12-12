@@ -26,8 +26,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto getUser(String username) {
-        Account user = accountRepository.findByUsername(username).orElseThrow();
+    public AccountDto getUser(String email) {
+        Account user = accountRepository.findByEmail(email).orElseThrow();
         return modelMapper.map(user, AccountDto.class);
     }
 
@@ -38,8 +38,8 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto updateUser(String username, AccountDto dto) {
-        Account user = accountRepository.findByUsername(username).orElseThrow();
+    public AccountDto updateUser(String email, AccountDto dto) {
+        Account user = accountRepository.findByEmail(email).orElseThrow();
         modelMapper.map(user, dto);
         accountRepository.save(user);
         return modelMapper.map(user, AccountDto.class);

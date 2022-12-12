@@ -2,6 +2,7 @@ package by.hackaton.bookcrossing.service.impl;
 
 import by.hackaton.bookcrossing.dto.AccountDto;
 import by.hackaton.bookcrossing.dto.request.LoginRequest;
+import by.hackaton.bookcrossing.dto.request.SignInRequest;
 import by.hackaton.bookcrossing.dto.security.AuthResponse;
 import by.hackaton.bookcrossing.dto.security.Token;
 import by.hackaton.bookcrossing.dto.security.TokenProvider;
@@ -56,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public AuthResponse signIn(LoginRequest request) {
+    public AuthResponse signIn(SignInRequest request) {
         if (accountRepository.existsByEmail(request.getEmail())) {
             throw new LogicalException(ServerError.EMAIL_ALREADY_EXISTS);
         }
@@ -67,7 +68,7 @@ public class AuthServiceImpl implements AuthService {
         VerificationStatus status = new VerificationStatus(account.getEmail(), verificationCode);
         verificationStatusRepository.save(status);
         //emailService.sendMessage(request.getEmail(), "Рэгістрацыя", "https://belarusian-bookcrossing.herokuapp.com/api/auth/verify/mail?email=" + account.getEmail() + "&code=" + verificationCode);
-        Authentication authentication = authenticate(request);
+        Authentication authentication = authenticate(new LoginRequest(request.getEmail(), request.getPassword()));
         String accessToken = tokenProvider.createToken(authentication);
         return new AuthResponse(new Token(accessToken), getAccountByEmail(request.getEmail()));
     }
