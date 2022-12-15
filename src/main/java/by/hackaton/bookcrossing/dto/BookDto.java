@@ -1,5 +1,7 @@
 package by.hackaton.bookcrossing.dto;
 
+import by.hackaton.bookcrossing.entity.enums.Obtain;
+import by.hackaton.bookcrossing.entity.enums.SendType;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
@@ -17,6 +19,7 @@ public class BookDto extends BookShortDto {
     @NotNull
     private Double longitude;
     private AccountShortDto owner;
-    private boolean sendStatus;
+    private SendType sendType;
+    private Obtain obtain;
     private String language;
 }

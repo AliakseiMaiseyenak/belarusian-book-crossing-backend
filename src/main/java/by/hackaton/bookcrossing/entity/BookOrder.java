@@ -1,6 +1,6 @@
 package by.hackaton.bookcrossing.entity;
 
-import by.hackaton.bookcrossing.entity.enums.SendMethod;
+import by.hackaton.bookcrossing.entity.enums.Obtain;
 import by.hackaton.bookcrossing.entity.enums.SendType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +28,7 @@ public class BookOrder {
     @Enumerated(EnumType.STRING)
     private SendType sendType;
     @Enumerated(EnumType.STRING)
-    private SendMethod sendMethod;
+    private Obtain obtain;
     @ColumnDefault("true")
     private boolean active;
 }

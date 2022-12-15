@@ -3,11 +3,9 @@ package by.hackaton.bookcrossing.dto.response;
 import by.hackaton.bookcrossing.dto.AccountShortDto;
 import by.hackaton.bookcrossing.dto.BookShortDto;
 import by.hackaton.bookcrossing.entity.enums.BookStatus;
-import by.hackaton.bookcrossing.entity.enums.SendMethod;
+import by.hackaton.bookcrossing.entity.enums.Obtain;
 import by.hackaton.bookcrossing.entity.enums.SendType;
 import lombok.Data;
-
-import javax.validation.constraints.NotNull;
 
 @Data
 public class BookResponse extends BookShortDto {
@@ -17,14 +15,12 @@ public class BookResponse extends BookShortDto {
     private String country;
     private String contacts;
     private String additional;
-    @NotNull
     private Double latitude;
-    @NotNull
     private Double longitude;
     private AccountShortDto owner;
     private AccountShortDto receiver;
     private BookStatus status;
     private SendType sendType;
-    private SendMethod sendMethod;
+    private Obtain obtain;
     private String language;
 }

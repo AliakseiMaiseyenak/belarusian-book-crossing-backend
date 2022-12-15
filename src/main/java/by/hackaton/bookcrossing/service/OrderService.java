@@ -34,7 +34,7 @@ public class OrderService {
         Book book = bookRepository.findByIdAndOwner_Email(dto.getBookId(), email).orElseThrow();
         Account sendTo = accountRepository.findByUsername(dto.getReceiver()).orElseThrow();
         BookOrder bookOrder = BookOrder.builder().book(book).receiver(sendTo).sendType(dto.getSendType())
-                .sendMethod(dto.getSendMethod()).build();
+                .obtain(dto.getObtain()).build();
         //orderRepository.save(bookOrder);
         book.getBookOrders().add(bookOrder);
         book.setStatus(BookStatus.SENT);

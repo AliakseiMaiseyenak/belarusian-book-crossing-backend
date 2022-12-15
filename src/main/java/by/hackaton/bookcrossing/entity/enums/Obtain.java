@@ -1,5 +1,5 @@
 package by.hackaton.bookcrossing.entity.enums;
 
-public enum SendMethod {
+public enum Obtain {
     POST, PERSONALLY, ANY
 }
