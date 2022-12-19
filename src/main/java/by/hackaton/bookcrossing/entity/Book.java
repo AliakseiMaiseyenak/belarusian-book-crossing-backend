@@ -12,7 +12,12 @@ import java.util.List;
 
 @Entity
 @Data
-public class Book extends BaseEntity {
+@lombok.NoArgsConstructor
+public class Book {
+    @Id
+    @GeneratedValue
+    private Long id;
+
     @NotBlank
     private String title;
     @NotBlank
