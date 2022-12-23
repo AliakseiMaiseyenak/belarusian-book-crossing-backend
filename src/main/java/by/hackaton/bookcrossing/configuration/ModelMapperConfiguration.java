@@ -3,10 +3,8 @@ package by.hackaton.bookcrossing.configuration;
 import by.hackaton.bookcrossing.dto.BookDto;
 import by.hackaton.bookcrossing.entity.Book;
 import by.hackaton.bookcrossing.repository.AccountRepository;
-import org.modelmapper.Conditions;
 import org.modelmapper.ExpressionMap;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,9 +27,9 @@ public class ModelMapperConfiguration {
                 return super.map(tmpSource, destinationType);
             }
         };
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT).setPropertyCondition(Conditions.isNotNull());
-        modelMapper.createTypeMap(Book.class, BookDto.class).addMappings(bookToDto());
-        modelMapper.createTypeMap(BookDto.class, Book.class).addMappings(dtoToBook());
+        modelMapper.getConfiguration().setMatchingStrategy(org.modelmapper.convention.MatchingStrategies.STRICT).setPropertyCondition(org.modelmapper.Conditions.isNotNull());
+        //modelMapper.createTypeMap(Book.class, BookDto.class).addMappings(bookToDto());
+        //modelMapper.createTypeMap(BookDto.class, Book.class).addMappings(dtoToBook());
         return modelMapper;
     }
 

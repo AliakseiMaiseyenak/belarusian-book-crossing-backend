@@ -92,6 +92,7 @@ public class SecurityConfig {
                 .antMatchers("/books/receive").authenticated()
                 .antMatchers("/books/*").permitAll()
                 .antMatchers("/books").permitAll()
+                .antMatchers("/organizations").permitAll()
                 .antMatchers("/profile").authenticated()
                 .antMatchers(HttpMethod.PUT, "/profile").authenticated()
                 .antMatchers("/profile/*").permitAll()

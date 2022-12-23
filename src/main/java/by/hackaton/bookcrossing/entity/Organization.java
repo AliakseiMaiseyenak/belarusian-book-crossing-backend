@@ -2,11 +2,8 @@ package by.hackaton.bookcrossing.entity;
 
 import by.hackaton.bookcrossing.entity.enums.OrganizationType;
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -29,6 +26,5 @@ public class Organization extends BaseEntity{
     private Double latitude;
     @NotNull
     private Double longitude;
-    @ColumnDefault("true")
-    private String available;
+    private Boolean available;
 }
