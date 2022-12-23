@@ -13,7 +13,7 @@ import java.io.IOException;
 public class CORSFilter implements Filter {
     private static final String FRONT_URL = "http://localhost:3000"; // URL
     private static final String BACK_URL = "http://localhost:8181"; // URL
-    private static final String MAIN_URL = "http://staronki.herokuapp.com"; // OTHER URL
+    private static final String MAIN_URL = "https://staronki.herokuapp.com"; // OTHER URL
 
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         final HttpServletResponse response = (HttpServletResponse) res;
