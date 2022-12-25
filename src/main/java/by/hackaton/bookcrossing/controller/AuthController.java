@@ -45,14 +45,14 @@ public class AuthController {
         return ok().build();
     }
 
-    @GetMapping("/delete/{username}")
-    public ResponseEntity<Void> deleteLast(@PathVariable String email){
+    @GetMapping("/delete/{email}")
+    public ResponseEntity<Void> deleteLast(@PathVariable String email) {
         authService.deleteByEmail(email);
         return ok().build();
     }
 
     @GetMapping("/delete")
-    public ResponseEntity<Void> deleteLast(){
+    public ResponseEntity<Void> deleteLast() {
         authService.deleteLast();
         return ok().build();
     }

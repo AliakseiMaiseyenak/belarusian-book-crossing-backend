@@ -2,18 +2,18 @@ package by.hackaton.bookcrossing.service.exceptions;
 
 import java.text.MessageFormat;
 
-public class LogicalException extends RuntimeException {
+public class EntityNotFoundException extends RuntimeException {
 
     private int statusCode;
 
-    public LogicalException(ServerError serverError) {
+    public EntityNotFoundException(ServerError serverError) {
         super(serverError.getMessage());
         this.statusCode = serverError.getStatus();
     }
 
-    public LogicalException(String pattern, Object... arguments) {
+    public EntityNotFoundException(String pattern, Object... arguments) {
         super(MessageFormat.format(pattern, arguments));
-        this.statusCode = ServerError.INTERNAL_SERVER_ERROR.getStatus();
+        this.statusCode = ServerError.ENTITY_NOT_FOUND.getStatus();
     }
 
     public int getStatusCode() {

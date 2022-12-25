@@ -21,12 +21,14 @@ import by.hackaton.bookcrossing.service.exceptions.ServerError;
 import by.hackaton.bookcrossing.service.exceptions.WrongPasswordException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -95,12 +97,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
-        Account account = accountRepository.findByEmail(request.getEmail()).orElseThrow();
+        Account account = accountRepository.findByEmail(request.getEmail()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Account not fount")
+        );
         if (!account.getPassword().equals(request.getPassword())) {
-            throw new WrongPasswordException(ServerError.WRONG_PASSWORD);
+            throw new WrongPasswordException(HttpStatus.BAD_REQUEST, "Wrong password");
         }
         if (!account.isEnabled()) {
-            throw new EmailConfirmationException(ServerError.EMAIL_NOT_CONFIRMED);
+            throw new EmailConfirmationException(HttpStatus.METHOD_NOT_ALLOWED, "Email not confirmed");
         }
         Authentication authentication = authenticate(request);
         String accessToken = tokenProvider.createToken(authentication);

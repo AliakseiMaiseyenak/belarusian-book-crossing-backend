@@ -1,22 +1,16 @@
 package by.hackaton.bookcrossing.service.exceptions;
 
-import java.text.MessageFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
+import org.springframework.web.server.ResponseStatusException;
 
-public class EmailConfirmationException extends RuntimeException {
+public class EmailConfirmationException extends ResponseStatusException {
 
-    private int statusCode;
-
-    public EmailConfirmationException(ServerError serverError) {
-        super(serverError.getMessage());
-        this.statusCode = serverError.getStatusCode();
+    public EmailConfirmationException(HttpStatus status) {
+        super(status);
     }
 
-    public EmailConfirmationException(String pattern, Object... arguments) {
-        super(MessageFormat.format(pattern, arguments));
-        this.statusCode = ServerError.EMAIL_NOT_CONFIRMED.getStatusCode();
-    }
-
-    public int getStatusCode() {
-        return statusCode;
+    public EmailConfirmationException(HttpStatus status, @Nullable String reason) {
+        super(status, reason);
     }
 }

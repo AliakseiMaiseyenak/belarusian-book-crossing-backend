@@ -1,22 +1,16 @@
 package by.hackaton.bookcrossing.service.exceptions;
 
-import java.text.MessageFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
+import org.springframework.web.server.ResponseStatusException;
 
-public class WrongPasswordException extends RuntimeException {
+public class WrongPasswordException extends ResponseStatusException {
 
-    private int statusCode;
-
-    public WrongPasswordException(ServerError serverError) {
-        super(serverError.getMessage());
-        this.statusCode = serverError.getStatusCode();
+    public WrongPasswordException(HttpStatus status) {
+        super(status);
     }
 
-    public WrongPasswordException(String pattern, Object... arguments) {
-        super(MessageFormat.format(pattern, arguments));
-        this.statusCode = ServerError.WRONG_PASSWORD.getStatusCode();
-    }
-
-    public int getStatusCode() {
-        return statusCode;
+    public WrongPasswordException(HttpStatus status, @Nullable String reason) {
+        super(status, reason);
     }
 }
