@@ -1,9 +1,6 @@
 package by.hackaton.bookcrossing.service;
 
-import by.hackaton.bookcrossing.dto.BookDto;
-import by.hackaton.bookcrossing.dto.BookFilter;
-import by.hackaton.bookcrossing.dto.BookShortDto;
-import by.hackaton.bookcrossing.dto.CreatedEntityIdResponse;
+import by.hackaton.bookcrossing.dto.*;
 import by.hackaton.bookcrossing.dto.response.BookResponse;
 import by.hackaton.bookcrossing.entity.Account;
 import by.hackaton.bookcrossing.entity.Book;
@@ -137,9 +134,10 @@ public class BookService {
                     NodeList list = (NodeList) xpath.evaluate(expression, doc, XPathConstants.NODESET);
                     Node node = list.item(0);
                     String title = getAttribute(node, "@title");
-                    String author = getAttribute(node, "@author");
+                    String authorFullname = getAttribute(node, "@author");
+                    AuthorDto author = new AuthorDto();
                     BookShortDto dto = new BookShortDto();
-                    dto.setAuthor(author);
+                    dto.setAuthors(List.of(author));
                     dto.setTitle(title);
                     dto.setISBN(isbn);
                     return dto;

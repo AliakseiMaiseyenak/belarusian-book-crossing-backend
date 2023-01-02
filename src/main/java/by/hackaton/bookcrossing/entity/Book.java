@@ -4,6 +4,7 @@ import by.hackaton.bookcrossing.entity.enums.BookStatus;
 import by.hackaton.bookcrossing.entity.enums.Obtain;
 import by.hackaton.bookcrossing.entity.enums.SendType;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Data
-@lombok.NoArgsConstructor
+@NoArgsConstructor
 public class Book {
     @Id
     @GeneratedValue
@@ -20,8 +21,8 @@ public class Book {
 
     @NotBlank
     private String title;
-    @NotBlank
-    private String author;
+    @OneToMany(mappedBy = "book")
+    private List<Author> authors;
     private int year;
     private String city;
     private String country;
@@ -40,8 +41,12 @@ public class Book {
     private Account receiver;
     @Enumerated(EnumType.STRING)
     private BookStatus status = BookStatus.AVAILABLE;
-    @Enumerated(EnumType.STRING)
-    private SendType sendType;
+    @ElementCollection
+    @CollectionTable(
+            name = "book_send_type",
+            joinColumns = @JoinColumn(name = "book_id")
+    )
+    private List<SendType> sendTypes;
     @Enumerated(EnumType.STRING)
     private Obtain obtain;
     private String language;

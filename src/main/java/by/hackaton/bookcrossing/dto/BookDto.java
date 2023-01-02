@@ -5,6 +5,7 @@ import by.hackaton.bookcrossing.entity.enums.SendType;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 public class BookDto extends BookShortDto {
@@ -19,7 +20,7 @@ public class BookDto extends BookShortDto {
     @NotNull
     private Double longitude;
     private AccountShortDto owner;
-    private SendType sendType;
+    private List<SendType> sendTypes;
     private Obtain obtain;
     private String language;
 }
