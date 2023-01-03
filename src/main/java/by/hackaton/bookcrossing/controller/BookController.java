@@ -3,8 +3,9 @@ package by.hackaton.bookcrossing.controller;
 import by.hackaton.bookcrossing.dto.BookDto;
 import by.hackaton.bookcrossing.dto.BookFilter;
 import by.hackaton.bookcrossing.dto.BookShortDto;
-import by.hackaton.bookcrossing.dto.CreatedEntityIdResponse;
-import by.hackaton.bookcrossing.dto.response.BookResponse;
+import by.hackaton.bookcrossing.dto.response.CreatedEntityIdResponse;
+import by.hackaton.bookcrossing.dto.response.BookOnMapResponse;
+import by.hackaton.bookcrossing.dto.response.OnMapResponse;
 import by.hackaton.bookcrossing.entity.Account;
 import by.hackaton.bookcrossing.repository.AccountRepository;
 import by.hackaton.bookcrossing.service.BookService;
@@ -36,15 +37,19 @@ public class BookController {
     public ResponseEntity<List<BookDto>> getBooks() {
         return ok(bookService.getBooks());
     }
+    @GetMapping("/format")
+    public ResponseEntity<List<OnMapResponse>> getBooksWithUser() {
+        return ok(bookService.getBooksWithUser());
+    }
 
     @GetMapping("/my")
-    public ResponseEntity<List<BookResponse>> getMyBooks(Authentication auth) {
+    public ResponseEntity<List<BookOnMapResponse>> getMyBooks(Authentication auth) {
         String email = AuthUtils.getEmailFromAuth(auth);
         return ok(bookService.getMyBooks(email));
     }
 
     @GetMapping("/sent")
-    public ResponseEntity<List<BookResponse>> getSentBooks(Authentication auth) {
+    public ResponseEntity<List<BookOnMapResponse>> getSentBooks(Authentication auth) {
         String email = AuthUtils.getEmailFromAuth(auth);
         return ok(bookService.getSentBooks(email));
     }

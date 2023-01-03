@@ -1,10 +1,10 @@
 package by.hackaton.bookcrossing.dto.request;
 
-import lombok.Getter;
+import lombok.Data;
 
 import javax.validation.constraints.Email;
 
-@Getter
+@Data
 public class SubscriptionRequest {
     @Email
     private String email;

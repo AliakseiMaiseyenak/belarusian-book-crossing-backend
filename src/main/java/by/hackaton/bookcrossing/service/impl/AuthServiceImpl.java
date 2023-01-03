@@ -15,10 +15,7 @@ import by.hackaton.bookcrossing.repository.TemporaryPasswordRepository;
 import by.hackaton.bookcrossing.repository.VerificationStatusRepository;
 import by.hackaton.bookcrossing.service.AuthService;
 import by.hackaton.bookcrossing.service.EmailService;
-import by.hackaton.bookcrossing.service.exceptions.EmailConfirmationException;
-import by.hackaton.bookcrossing.service.exceptions.LogicalException;
-import by.hackaton.bookcrossing.service.exceptions.ServerError;
-import by.hackaton.bookcrossing.service.exceptions.WrongPasswordException;
+import by.hackaton.bookcrossing.service.exceptions.BadRequestException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -61,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public AuthResponse signIn(SignInRequest request) {
         if (accountRepository.existsByEmail(request.getEmail())) {
-            throw new LogicalException(ServerError.EMAIL_ALREADY_EXISTS);
+            throw new BadRequestException("Email already exists");
         }
         Account account = modelMapper.map(request, Account.class);
         account.setRole(Role.USER);
@@ -78,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void resetPassword(String email) {
         if (!accountRepository.existsByEmail(email)) {
-            throw new LogicalException("Email not found");
+            throw new BadRequestException("Email not found");
         }
         String verificationCode = RandomStringUtils.randomAlphabetic(32);
         TemporaryPassword temp = temporaryPasswordRepository.findById(email).orElse(new TemporaryPassword(email));
@@ -101,10 +98,10 @@ public class AuthServiceImpl implements AuthService {
                 () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Account not fount")
         );
         if (!account.getPassword().equals(request.getPassword())) {
-            throw new WrongPasswordException(HttpStatus.BAD_REQUEST, "Wrong password");
+            throw new BadRequestException("Wrong password");
         }
         if (!account.isEnabled()) {
-            throw new EmailConfirmationException(HttpStatus.METHOD_NOT_ALLOWED, "Email not confirmed");
+            throw new ResponseStatusException(HttpStatus.METHOD_NOT_ALLOWED, "Email not confirmed");
         }
         Authentication authentication = authenticate(request);
         String accessToken = tokenProvider.createToken(authentication);

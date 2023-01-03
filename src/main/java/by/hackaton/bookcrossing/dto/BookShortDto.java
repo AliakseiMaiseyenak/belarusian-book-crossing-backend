@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class BookShortDto {
+    private Long id;
     @NotBlank
     private String title;
     private List<AuthorDto> authors;

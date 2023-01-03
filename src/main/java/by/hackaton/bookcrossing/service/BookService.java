@@ -1,10 +1,14 @@
 package by.hackaton.bookcrossing.service;
 
 import by.hackaton.bookcrossing.dto.*;
-import by.hackaton.bookcrossing.dto.response.BookResponse;
+import by.hackaton.bookcrossing.dto.response.AccountShortResponse;
+import by.hackaton.bookcrossing.dto.response.BookOnMapResponse;
+import by.hackaton.bookcrossing.dto.response.OnMapResponse;
+import by.hackaton.bookcrossing.dto.response.CreatedEntityIdResponse;
 import by.hackaton.bookcrossing.entity.Account;
 import by.hackaton.bookcrossing.entity.Book;
 import by.hackaton.bookcrossing.entity.enums.BookStatus;
+import by.hackaton.bookcrossing.repository.AccountRepository;
 import by.hackaton.bookcrossing.repository.BookRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -33,8 +37,11 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -47,10 +54,13 @@ public class BookService {
     private EntityManager em;
 
     private BookRepository bookRepository;
+    private AccountRepository accountRepository;
     private ModelMapper modelMapper;
 
-    public BookService(BookRepository bookRepository, ModelMapper modelMapper) {
+    public BookService(BookRepository bookRepository, AccountRepository accountRepository,
+                       ModelMapper modelMapper) {
         this.bookRepository = bookRepository;
+        this.accountRepository = accountRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -58,17 +68,26 @@ public class BookService {
         return bookRepository.findByStatusAVAILABLE().stream().map(b -> modelMapper.map(b, BookDto.class)).collect(toList());
     }
 
+    public List<OnMapResponse> getBooksWithUser() {
+        List<Account> accounts = accountRepository.findAll();
+        Map<AccountShortResponse, List<Book>> mapa = accounts.stream().collect(Collectors.toMap(a -> modelMapper.map(a, AccountShortResponse.class), Account::getBooks));
+        List<OnMapResponse> list = new ArrayList<>();
+        mapa.forEach((k, v) -> list.add(createBookWithUser(k, v)));
+        return list;
+    }
+
     public BookDto getBookById(Long id) {
         Book book = bookRepository.findById(id).orElseThrow();
         return modelMapper.map(book, BookDto.class);
 
     }
-    public List<BookResponse> getMyBooks(String email) {
-        return bookRepository.findByOwner_Email(email).stream().map(b -> modelMapper.map(b, BookResponse.class)).collect(toList());
+
+    public List<BookOnMapResponse> getMyBooks(String email) {
+        return bookRepository.findByOwner_Email(email).stream().map(b -> modelMapper.map(b, BookOnMapResponse.class)).collect(toList());
     }
 
-    public List<BookResponse> getSentBooks(String email) {
-        return bookRepository.findByReceiver_Email(email).stream().map(b -> modelMapper.map(b, BookResponse.class)).collect(toList());
+    public List<BookOnMapResponse> getSentBooks(String email) {
+        return bookRepository.findByReceiver_Email(email).stream().map(b -> modelMapper.map(b, BookOnMapResponse.class)).collect(toList());
     }
 
     public CreatedEntityIdResponse createBook(BookDto dto, Account owner) {
@@ -109,6 +128,11 @@ public class BookService {
                 break;
         }
         return em.createQuery(criteria).getResultList();
+    }
+
+    private OnMapResponse createBookWithUser(AccountShortResponse account, List<Book> books) {
+        return new OnMapResponse(account, books.stream().filter(b -> BookStatus.AVAILABLE.equals(b.getStatus()))
+                .map(b -> modelMapper.map(b, BookOnMapResponse.class)).collect(toList()));
     }
 
     public BookShortDto findBookByISBN(String isbn) {

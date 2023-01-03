@@ -1,7 +1,7 @@
 package by.hackaton.bookcrossing.controller;
 
 import by.hackaton.bookcrossing.dto.BookDto;
-import by.hackaton.bookcrossing.dto.CreateOrderDTO;
+import by.hackaton.bookcrossing.dto.request.CreateOrderRequest;
 import by.hackaton.bookcrossing.dto.OrderDto;
 import by.hackaton.bookcrossing.dto.request.OrderRequest;
 import by.hackaton.bookcrossing.repository.OrderRepository;
@@ -39,7 +39,7 @@ public class OrderController {
     }
 
     @PostMapping("/sent")
-    public ResponseEntity<BookDto> sendBook(@RequestBody CreateOrderDTO dto, Authentication auth) {
+    public ResponseEntity<BookDto> sendBook(@RequestBody CreateOrderRequest dto, Authentication auth) {
         return ok(orderService.sendBook(dto, AuthUtils.getEmailFromAuth(auth)));
     }
 
@@ -47,12 +47,6 @@ public class OrderController {
     public ResponseEntity<BookDto> cancelSending(@RequestBody OrderRequest request, Authentication auth) {
         return ok(orderService.cancel(request.bookId, AuthUtils.getEmailFromAuth(auth)));
     }
-
-    /*@PutMapping("/sent")
-    public ResponseEntity<Void> sendBook(@RequestBody OrderRequest request, Authentication auth) {
-        orderService.receiveBook(request.bookId, AuthUtils.getEmailFromAuth(auth));
-        return ok().build();
-    }*/
 
     @PutMapping("/receive")
     public ResponseEntity<Void> receiveBook(@RequestBody OrderRequest request, Authentication auth) {

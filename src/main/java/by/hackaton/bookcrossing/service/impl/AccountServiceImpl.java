@@ -7,7 +7,7 @@ import by.hackaton.bookcrossing.entity.Account;
 import by.hackaton.bookcrossing.repository.AccountRepository;
 import by.hackaton.bookcrossing.repository.TemporaryPasswordRepository;
 import by.hackaton.bookcrossing.service.AccountService;
-import by.hackaton.bookcrossing.service.exceptions.LogicalException;
+import by.hackaton.bookcrossing.service.exceptions.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +59,7 @@ public class AccountServiceImpl implements AccountService {
             account.setPassword(request.getPassword());
             accountRepository.save(account);
         } else {
-            throw new LogicalException("Email and code not found");
+            throw new BadRequestException("Email and code not found");
         }
     }
 }

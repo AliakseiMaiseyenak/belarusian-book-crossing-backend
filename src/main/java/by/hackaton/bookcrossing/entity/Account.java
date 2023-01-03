@@ -22,6 +22,7 @@ public class Account {
     private List<Book> sentBooks;
     private Double latitude;
     private Double longitude;
+    private String contact;
     private boolean enabled = true;
     private Boolean deleted = false;
 

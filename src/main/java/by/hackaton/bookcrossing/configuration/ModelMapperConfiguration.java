@@ -5,15 +5,17 @@ import by.hackaton.bookcrossing.entity.Book;
 import by.hackaton.bookcrossing.repository.AccountRepository;
 import org.modelmapper.ExpressionMap;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ModelMapperConfiguration {
 
-    @Autowired
     private AccountRepository repository;
+
+    public ModelMapperConfiguration(AccountRepository accountRepository) {
+        this.repository = accountRepository;
+    }
 
     @Bean
     public ModelMapper modelMapper() {
@@ -28,20 +30,16 @@ public class ModelMapperConfiguration {
             }
         };
         modelMapper.getConfiguration().setMatchingStrategy(org.modelmapper.convention.MatchingStrategies.STRICT).setPropertyCondition(org.modelmapper.Conditions.isNotNull());
-        //modelMapper.createTypeMap(Book.class, BookDto.class).addMappings(bookToDto());
-        //modelMapper.createTypeMap(BookDto.class, Book.class).addMappings(dtoToBook());
+        modelMapper.createTypeMap(Book.class, BookDto.class).addMappings(bookToDto());
+        modelMapper.createTypeMap(BookDto.class, Book.class).addMappings(dtoToBook());
         return modelMapper;
     }
 
     private ExpressionMap<Book, BookDto> bookToDto() {
-        return (m) -> {
-            m.map(book -> book.getOwner().getUsername(), BookDto::setOwner);
-        };
+        return (m) -> m.map(book -> book.getOwner().getUsername(), BookDto::setOwner);
     }
 
     private ExpressionMap<BookDto, Book> dtoToBook() {
-        return (m) -> {
-            m.skip(Book::setOwner);
-        };
+        return (m) -> m.skip(Book::setOwner);
     }
 }

@@ -7,8 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
@@ -19,7 +17,6 @@ public class Book {
     @GeneratedValue
     private Long id;
 
-    @NotBlank
     private String title;
     @OneToMany(mappedBy = "book")
     private List<Author> authors;
@@ -29,9 +26,7 @@ public class Book {
     private String ISBN;
     private String contacts;
     private String additional;
-    @NotNull
     private Double latitude;
-    @NotNull
     private Double longitude;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")

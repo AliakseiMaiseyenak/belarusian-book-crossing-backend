@@ -1,6 +1,6 @@
 package by.hackaton.bookcrossing.controller;
 
-import by.hackaton.bookcrossing.dto.request.EmailRequest;
+import by.hackaton.bookcrossing.dto.request.EmailMessageRequest;
 import by.hackaton.bookcrossing.service.EmailService;
 import by.hackaton.bookcrossing.util.AuthUtils;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +23,7 @@ public class FeedbackController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> sendEmail(@RequestBody EmailRequest request, Authentication auth){
+    public ResponseEntity<Void> sendEmail(@RequestBody EmailMessageRequest request, Authentication auth){
         emailService.sendFeedbackMessage(AuthUtils.getEmailFromAuth(auth), request.subject, request.body);
         return ok().build();
     }

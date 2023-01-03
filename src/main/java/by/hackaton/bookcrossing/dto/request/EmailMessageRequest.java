@@ -1,6 +1,6 @@
 package by.hackaton.bookcrossing.dto.request;
 
-public class EmailRequest {
+public class EmailMessageRequest {
     public String subject;
     public String body;
 }

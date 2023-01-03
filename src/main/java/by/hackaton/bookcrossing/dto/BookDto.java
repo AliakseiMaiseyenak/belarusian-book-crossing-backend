@@ -9,8 +9,6 @@ import java.util.List;
 
 @Data
 public class BookDto extends BookShortDto {
-    private Long id;
-    private int year;
     private String city;
     private String country;
     private String contacts;
@@ -22,5 +20,4 @@ public class BookDto extends BookShortDto {
     private AccountShortDto owner;
     private List<SendType> sendTypes;
     private Obtain obtain;
-    private String language;
 }

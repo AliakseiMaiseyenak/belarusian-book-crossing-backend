@@ -1,7 +1,7 @@
 package by.hackaton.bookcrossing.service;
 
 import by.hackaton.bookcrossing.dto.BookDto;
-import by.hackaton.bookcrossing.dto.CreateOrderDTO;
+import by.hackaton.bookcrossing.dto.request.CreateOrderRequest;
 import by.hackaton.bookcrossing.entity.Account;
 import by.hackaton.bookcrossing.entity.Book;
 import by.hackaton.bookcrossing.entity.BookOrder;
@@ -30,7 +30,7 @@ public class OrderService {
     }
 
     @Transactional
-    public BookDto sendBook(CreateOrderDTO dto, String email){
+    public BookDto sendBook(CreateOrderRequest dto, String email){
         Book book = bookRepository.findByIdAndOwner_Email(dto.getBookId(), email).orElseThrow();
         Account sendTo = accountRepository.findByUsername(dto.getReceiver()).orElseThrow();
         BookOrder bookOrder = BookOrder.builder().book(book).receiver(sendTo).sendType(dto.getSendType())
