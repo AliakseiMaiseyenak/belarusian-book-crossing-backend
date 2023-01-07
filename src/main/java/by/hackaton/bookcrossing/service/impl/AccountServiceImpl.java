@@ -65,7 +65,7 @@ public class AccountServiceImpl implements AccountService {
             user.setAvatar(avatar.getBytes());
             accountRepository.save(user);
         } catch (IOException ex) {
-
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error while avatar reading");
         }
     }
 

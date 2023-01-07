@@ -38,6 +38,7 @@ public class BookController {
     public ResponseEntity<List<BookDto>> getBooks() {
         return ok(bookService.getBooks());
     }
+
     @GetMapping("/format")
     public ResponseEntity<List<OnMapResponse>> getBooksWithUser() {
         return ok(bookService.getBooksWithUser());
