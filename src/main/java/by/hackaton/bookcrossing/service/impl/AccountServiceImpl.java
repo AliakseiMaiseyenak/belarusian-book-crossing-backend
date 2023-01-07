@@ -3,13 +3,19 @@ package by.hackaton.bookcrossing.service.impl;
 import by.hackaton.bookcrossing.dto.AccountDto;
 import by.hackaton.bookcrossing.dto.AccountShortDto;
 import by.hackaton.bookcrossing.dto.request.PasswordRequest;
+import by.hackaton.bookcrossing.dto.response.AccountProfileResponse;
 import by.hackaton.bookcrossing.entity.Account;
 import by.hackaton.bookcrossing.repository.AccountRepository;
 import by.hackaton.bookcrossing.repository.TemporaryPasswordRepository;
 import by.hackaton.bookcrossing.service.AccountService;
 import by.hackaton.bookcrossing.service.exceptions.BadRequestException;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.io.IOException;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -26,28 +32,48 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountDto getUser(String email) {
-        Account user = accountRepository.findByEmail(email).orElseThrow();
-        return modelMapper.map(user, AccountDto.class);
+    public AccountProfileResponse getUser(String email) {
+        Account user = accountRepository.findByEmail(email).orElseThrow(
+                () -> new BadRequestException("Account not fount")
+        );
+        return modelMapper.map(user, AccountProfileResponse.class);
     }
 
     @Override
     public AccountShortDto getUserByUsername(String username) {
-        Account user = accountRepository.findByUsername(username).orElseThrow();
+        Account user = accountRepository.findByUsername(username).orElseThrow(
+                () -> new BadRequestException("Account not fount")
+        );
         return modelMapper.map(user, AccountShortDto.class);
     }
 
     @Override
-    public AccountDto updateUser(String email, AccountDto dto) {
-        Account user = accountRepository.findByEmail(email).orElseThrow();
+    public void updateUser(String email, AccountDto dto) {
+        Account user = accountRepository.findByEmail(email).orElseThrow(
+                () -> new BadRequestException("Account not fount")
+        );
         modelMapper.map(user, dto);
         accountRepository.save(user);
-        return modelMapper.map(user, AccountDto.class);
+    }
+
+    @Override
+    public void updateUserAvatar(String email, MultipartFile avatar) {
+        try {
+            Account user = accountRepository.findByEmail(email).orElseThrow(
+                    () -> new BadRequestException("Account not fount")
+            );
+            user.setAvatar(avatar.getBytes());
+            accountRepository.save(user);
+        } catch (IOException ex) {
+
+        }
     }
 
     @Override
     public void changePassword(String newPassword, String email) {
-        Account account = accountRepository.findByEmail(email).orElseThrow();
+        Account account = accountRepository.findByEmail(email).orElseThrow(
+                () -> new BadRequestException("Account not fount")
+        );
         account.setPassword(newPassword);
         accountRepository.save(account);
     }
@@ -55,7 +81,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void changePasswordWithCode(PasswordRequest request) {
         if (passwordRepository.existsByEmailAndCode(request.getEmail(), request.getCode())) {
-            Account account = accountRepository.findByEmail(request.getEmail()).orElseThrow();
+            Account account = accountRepository.findByEmail(request.getEmail()).orElseThrow(
+                    () -> new BadRequestException("Account not fount")
+            );
             account.setPassword(request.getPassword());
             accountRepository.save(account);
         } else {

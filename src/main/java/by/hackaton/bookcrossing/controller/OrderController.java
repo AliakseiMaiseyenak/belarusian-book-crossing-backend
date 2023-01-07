@@ -8,6 +8,7 @@ import by.hackaton.bookcrossing.repository.OrderRepository;
 import by.hackaton.bookcrossing.service.OrderService;
 import by.hackaton.bookcrossing.util.AuthUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,7 @@ public class OrderController {
     }
 
     @PutMapping("/receive")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> receiveBook(@RequestBody OrderRequest request, Authentication auth) {
         orderService.receiveBook(request.bookId, AuthUtils.getEmailFromAuth(auth));
         return ok().build();

@@ -138,7 +138,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private AccountDto getAccountByEmail(String email) {
-        Account account = accountRepository.findByEmail(email).orElseThrow();
+        Account account = accountRepository.findByEmail(email).orElseThrow(
+                () -> new BadRequestException("Account not fount")
+        );
         return modelMapper.map(account, AccountDto.class);
     }
 }

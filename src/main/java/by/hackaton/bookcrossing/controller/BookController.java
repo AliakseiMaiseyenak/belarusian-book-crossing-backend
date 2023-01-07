@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import javax.websocket.server.PathParam;
@@ -77,7 +78,9 @@ public class BookController {
         Account account = null;
         if (auth != null) {
             String email = AuthUtils.getEmailFromAuth(auth);
-            account = accountRepository.findByEmail(email).orElseThrow();
+            account = accountRepository.findByEmail(email).orElseThrow(
+                    () -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Account not fount")
+            );
         }
         return ok(bookService.createBook(dto, account));
     }

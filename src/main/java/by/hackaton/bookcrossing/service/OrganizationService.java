@@ -4,6 +4,7 @@ import by.hackaton.bookcrossing.dto.OrganizationDto;
 import by.hackaton.bookcrossing.entity.Organization;
 import by.hackaton.bookcrossing.entity.enums.OrganizationType;
 import by.hackaton.bookcrossing.repository.OrganizationRepository;
+import by.hackaton.bookcrossing.service.exceptions.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,9 @@ public class OrganizationService {
     }
 
     public OrganizationDto getOrganizationById(Long id) {
-        Organization organization = organizationRepository.findById(id).orElseThrow();
+        Organization organization = organizationRepository.findById(id).orElseThrow(
+                () -> new BadRequestException("Organization not fount")
+        );
         return modelMapper.map(organization, OrganizationDto.class);
     }
 
@@ -42,7 +45,9 @@ public class OrganizationService {
     }
 
     public void updateOrganization(Long id, OrganizationDto dto) {
-        Organization organization = organizationRepository.findById(id).orElseThrow();
+        Organization organization = organizationRepository.findById(id).orElseThrow(
+                () -> new BadRequestException("Organization not fount")
+        );
         modelMapper.map(organization, dto);
         organizationRepository.save(organization);
     }

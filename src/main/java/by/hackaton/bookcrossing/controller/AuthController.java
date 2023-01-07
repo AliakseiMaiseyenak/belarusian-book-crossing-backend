@@ -29,6 +29,7 @@ public class AuthController {
     }
 
     @GetMapping("/verify/mail")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> verifyMail(@RequestParam("email") String email, @RequestParam("code") String code) {
         authService.signUpConfirm(email, code);
         return ok().build();
@@ -40,24 +41,28 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> resetPassword(@RequestBody @Valid EmailDto dto) {
         authService.resetPassword(dto.getEmail());
         return ok().build();
     }
 
     @GetMapping("/delete/{email}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteLast(@PathVariable String email) {
         authService.deleteByEmail(email);
         return ok().build();
     }
 
     @GetMapping("/delete")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> deleteLast() {
         authService.deleteLast();
         return ok().build();
     }
 
     @GetMapping("/check/{username}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> checkUsername(@PathVariable String username) {
         if (!authService.isUsernameExist(username)) {
             return ok().build();

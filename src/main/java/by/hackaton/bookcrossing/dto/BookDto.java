@@ -20,4 +20,5 @@ public class BookDto extends BookShortDto {
     private AccountShortDto owner;
     private List<SendType> sendTypes;
     private Obtain obtain;
+    private byte[] image;
 }

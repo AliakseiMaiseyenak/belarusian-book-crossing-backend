@@ -45,6 +45,7 @@ public class OrganizationController {
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<Void> updateOrganization(@PathVariable("id") Long id, @RequestParam OrganizationDto dto) {
         organizationService.updateOrganization(id, dto);
         return ok().build();

@@ -10,6 +10,7 @@ import by.hackaton.bookcrossing.entity.Book;
 import by.hackaton.bookcrossing.entity.enums.BookStatus;
 import by.hackaton.bookcrossing.repository.AccountRepository;
 import by.hackaton.bookcrossing.repository.BookRepository;
+import by.hackaton.bookcrossing.service.exceptions.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,7 +78,9 @@ public class BookService {
     }
 
     public BookDto getBookById(Long id) {
-        Book book = bookRepository.findById(id).orElseThrow();
+        Book book = bookRepository.findById(id).orElseThrow(
+                () -> new BadRequestException("Book not fount")
+        );
         return modelMapper.map(book, BookDto.class);
 
     }
@@ -98,7 +101,9 @@ public class BookService {
     }
 
     public BookDto updateBook(Long id, BookDto dto, String email) {
-        Book book = bookRepository.findByIdAndOwner_Email(id, email).orElseThrow();
+        Book book = bookRepository.findByIdAndOwner_Email(id, email).orElseThrow(
+                () -> new BadRequestException("Book not fount")
+        );
         modelMapper.map(book, dto);
         bookRepository.save(book);
         return modelMapper.map(book, BookDto.class);
@@ -106,7 +111,9 @@ public class BookService {
 
     @Transactional
     public BookDto updateStatus(Long id, String email) {
-        Book book = bookRepository.findByIdAndOwner_Email(id, email).orElseThrow();
+        Book book = bookRepository.findByIdAndOwner_Email(id, email).orElseThrow(
+                () -> new BadRequestException("Book not fount")
+        );
         BookStatus newStatus = book.getStatus().equals(BookStatus.AVAILABLE) ? BookStatus.NOT_AVAILABLE : BookStatus.AVAILABLE;
         book.setStatus(newStatus);
         bookRepository.save(book);

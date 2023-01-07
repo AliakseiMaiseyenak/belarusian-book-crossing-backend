@@ -47,5 +47,6 @@ public class Book {
     private String language;
     @OneToMany(mappedBy = "book")
     private List<BookOrder> bookOrders;
+    private byte[] image;
 
 }
